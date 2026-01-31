@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock, FaCheckCircle } from 'react-icons/fa'
-import axios from 'axios'
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -68,7 +67,7 @@ const Contact = () => {
     }
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
     
     const newErrors = validateForm()
@@ -77,26 +76,33 @@ const Contact = () => {
       return
     }
     
-    setIsSubmitting(true)
-    setSubmitStatus(null)
+    // Construct mailto link with pre-filled information
+    const subject = `Project Inquiry - ${formData.projectType}`
+    const body = `
+Name: ${formData.name}
+Email: ${formData.email}
+Phone: ${formData.phone}
+Project Type: ${formData.projectType}
+
+Message:
+${formData.message}
+    `.trim()
     
-    try {
-      await axios.post('/api/contact', formData)
-      setSubmitStatus('success')
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        projectType: '',
-        message: ''
-      })
-      setErrors({})
-    } catch (error) {
-      setSubmitStatus('error')
-      console.error('Error submitting form:', error)
-    } finally {
-      setIsSubmitting(false)
-    }
+    const mailtoLink = `mailto:mikewarrenconstruction@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    
+    // Open user's default email client
+    window.location.href = mailtoLink
+    
+    // Show success message and reset form
+    setSubmitStatus('success')
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      projectType: '',
+      message: ''
+    })
+    setErrors({})
   }
 
   return (
