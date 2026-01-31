@@ -4,6 +4,7 @@ import { FaPhone, FaBars, FaTimes } from 'react-icons/fa'
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const baseUrl = import.meta.env.BASE_URL
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,7 +35,7 @@ const Navbar = () => {
               className="transition-opacity hover:opacity-80"
             >
               <img 
-                src={isScrolled ? '/logo/logo-default.png' : '/logo/logo-white.png'}
+                src={isScrolled ? `${baseUrl}logo/logo-default.png` : `${baseUrl}logo/logo-white.png`}
                 alt="M.WARREN CONSTRUCTION"
                 className="h-12 w-auto"
               />
