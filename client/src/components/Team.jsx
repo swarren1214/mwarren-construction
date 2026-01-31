@@ -58,7 +58,7 @@ const Team = () => {
                     community.
                   </p>
                   <p>
-                    From custom retaining walls to complete landscape transformations, Mike personally 
+                    From home builds to custom retaining walls and complete landscape transformations, Mike personally 
                     oversees each project to ensure it meets the highest standards of quality and exceeds 
                     client expectations.
                   </p>
