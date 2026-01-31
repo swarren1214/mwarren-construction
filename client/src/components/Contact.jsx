@@ -274,7 +274,7 @@ const Contact = () => {
                   name="projectType"
                   value={formData.projectType}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-earth-500 focus:border-earth-500 outline-none transition-colors ${
+                  className={`w-full h-12 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-earth-500 focus:border-earth-500 outline-none transition-colors ${
                     errors.projectType ? 'border-red-500' : 'border-gray-300'
                   }`}
                 >

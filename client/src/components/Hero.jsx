@@ -36,7 +36,7 @@ const Hero = () => {
         <div className="text-center text-white">
           {/* Main Heading */}
           <div className="mb-6">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-wider mb-4 drop-shadow-2xl">
+            <h1 className=" text-4xl sm:text-3xl md:text-7xl lg:text-8xl font-bold tracking-wider mb-4 drop-shadow-2xl">
               M.WARREN CONSTRUCTION
             </h1>
             <div className="h-1 w-32 bg-white mx-auto mb-6"></div>
