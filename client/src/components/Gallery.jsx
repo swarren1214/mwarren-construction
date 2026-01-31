@@ -248,10 +248,9 @@ const Gallery = () => {
             <button
               onClick={goToPreviousPage}
               disabled={currentPage === 1}
-              className="px-4 py-2 rounded-lg bg-white border-2 border-earth-600 text-earth-600 font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-earth-50 transition-colors"
+              className="px-3 py-2 rounded-lg items-center justify-center bg-white border-2 border-earth-600 text-earth-600 font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-earth-50 transition-colors"
             >
-              <FaChevronLeft className="inline mr-2" />
-              Previous
+              <FaChevronLeft className="inline h-4 w-4 mb-1 mr-1" />
             </button>
 
             {/* Page Numbers */}
@@ -291,10 +290,9 @@ const Gallery = () => {
             <button
               onClick={goToNextPage}
               disabled={currentPage === totalPages}
-              className="px-4 py-2 rounded-lg bg-white border-2 border-earth-600 text-earth-600 font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-earth-50 transition-colors"
+              className="px-3 py-2 rounded-lg items-center justify-center bg-white border-2 border-earth-600 text-earth-600 font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-earth-50 transition-colors"
             >
-              Next
-              <FaChevronRight className="inline ml-2" />
+              <FaChevronRight className="inline h-4 w-4 mb-1 ml-1" />
             </button>
           </div>
         </div>
