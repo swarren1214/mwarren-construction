@@ -2,6 +2,8 @@ import React from 'react'
 import { FaPhone, FaEnvelope, FaHardHat, FaAward } from 'react-icons/fa'
 
 const Hero = () => {
+  const baseUrl = import.meta.env.BASE_URL
+  
   const scrollToContact = () => {
     const element = document.getElementById('contact')
     if (element) {
@@ -22,13 +24,13 @@ const Hero = () => {
       <div 
         className="absolute inset-0 z-0"
         style={{
-          backgroundImage: 'url(https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop)',
+          backgroundImage: `url(${baseUrl}images/IMG_0300.jpg)`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed'
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-earth-900/90 via-earth-800/85 to-gray-900/90"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-earth-900/80 via-earth-800/85 to-gray-900/80"></div>
       </div>
 
       {/* Content */}
@@ -46,25 +48,25 @@ const Hero = () => {
           </div>
 
           {/* Specialization */}
-          <div className="mb-24">
+          <div className="mb-16">
             <p className="text-2xl sm:text-3xl md:text-4xl font-light text-gray-200 leading-relaxed max-w-4xl mx-auto">
-              Professional Landscapes & Retaining Walls
+              Professional Home Builds, Remodels, Landscapes & Retaining Walls
             </p>
           </div>
 
           {/* Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+            <div className="bg-white/10 backdrop-blur-md rounded-lg p-6 border border-white/20">
               <FaHardHat className="text-4xl mb-3 mx-auto text-yellow-400" />
               <h3 className="text-3xl font-bold mb-2">15+</h3>
               <p className="text-gray-200">Years Experience</p>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+            <div className="bg-white/10 backdrop-blur-md rounded-lg p-6 border border-white/20">
               <FaAward className="text-4xl mb-3 mx-auto text-yellow-400" />
               <h3 className="text-3xl font-bold mb-2">B100</h3>
               <p className="text-gray-200">Licensed Contractor</p>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+            <div className="bg-white/10 backdrop-blur-md rounded-lg p-6 border border-white/20">
               <div className="text-4xl mb-3 mx-auto">🏆</div>
               <h3 className="text-3xl font-bold mb-2">100%</h3>
               <p className="text-gray-200">Client Satisfaction</p>

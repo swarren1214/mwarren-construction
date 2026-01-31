@@ -124,8 +124,8 @@ ${formData.message}
             <div>
               <h3 className="text-3xl font-bold text-gray-900 mb-6">Let's Build Something Great Together</h3>
               <p className="text-gray-600 text-lg mb-8">
-                With over 15 years of experience in professional landscapes and retaining walls, 
-                we're committed to delivering exceptional results for every project.
+                With over 15 years of experience as a General Contractor, we are committed to delivering exceptional Results for every project.
+                We build everything from new homes to remodels and we possess a unique in house artistic talent for Landscape and retaining wall construction and design. 
               </p>
             </div>
 

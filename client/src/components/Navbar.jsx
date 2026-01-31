@@ -53,6 +53,14 @@ const Navbar = () => {
               Home
             </button>
             <button 
+              onClick={() => scrollToSection('team')}
+              className={`font-medium transition-colors ${
+                isScrolled ? 'text-gray-700 hover:text-earth-600' : 'text-white hover:text-gray-200'
+              }`}
+            >
+              Team
+            </button>
+            <button 
               onClick={() => scrollToSection('gallery')}
               className={`font-medium transition-colors ${
                 isScrolled ? 'text-gray-700 hover:text-earth-600' : 'text-white hover:text-gray-200'
@@ -99,6 +107,12 @@ const Navbar = () => {
                 className="text-gray-700 hover:text-earth-600 font-medium px-4 py-2 text-left"
               >
                 Home
+              </button>
+              <button 
+                onClick={() => scrollToSection('team')}
+                className="text-gray-700 hover:text-earth-600 font-medium px-4 py-2 text-left"
+              >
+                Team
               </button>
               <button 
                 onClick={() => scrollToSection('gallery')}
