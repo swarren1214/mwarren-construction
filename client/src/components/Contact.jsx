@@ -125,7 +125,6 @@ const Contact = () => {
         }
       })
       
-      console.log('Response status:', response.status, response.statusText)
       
       if (response.ok) {
         // Success
@@ -142,13 +141,11 @@ const Contact = () => {
       } else {
         // Error from server
         const data = await response.json()
-        console.error('Formspree error response:', data)
         setSubmitStatus('error')
         setErrorMessage(data.error || data.errors?.[0]?.message || 'There was an error sending your message. Please try calling us directly at (801) 369-8515.')
       }
     } catch (error) {
       // Network or other error
-      console.error('Form submission error:', error)
       setSubmitStatus('error')
       setErrorMessage('There was an error sending your message. Please try calling us directly at (801) 369-8515.')
     } finally {
