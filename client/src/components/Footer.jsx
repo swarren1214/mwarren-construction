@@ -12,7 +12,7 @@ const Footer = () => {
           <div>
             <h3 className="text-2xl font-bold mb-4">M.WARREN CONSTRUCTION</h3>
             <p className="text-gray-300 mb-4">
-              B100 General Contractor specializing in professional landscapes and retaining walls. 
+              B100 General Contractor Specializing in New Home Builds, Remodels, Professional Landscapes and Retaining walls. 
               Serving Utah County with 15+ years of experience.
             </p>
           </div>
