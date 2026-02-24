@@ -110,7 +110,7 @@ const Gallery = () => {
   }
 
   return (
-    <section id="gallery" className="py-20 bg-gray-50">
+    <section id="gallery" className="py-20 bg-gray-50 dark:bg-slate-950">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -125,7 +125,7 @@ const Gallery = () => {
         {/* Gallery Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {availableImages.length === 0 && (
-            <div className="col-span-full text-center text-gray-500 py-16 bg-white rounded-lg border border-gray-200">
+            <div className="col-span-full text-center text-gray-500 dark:text-gray-400 py-16 bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-800">
               No gallery photos are available yet.
             </div>
           )}
@@ -165,7 +165,7 @@ const Gallery = () => {
         {/* Pagination Controls */}
         <div className="mt-12 flex flex-col items-center gap-6">
           {/* Page Info */}
-          <div className="text-gray-600 text-sm">
+          <div className="text-gray-600 dark:text-gray-300 text-sm">
             Showing {availableImages.length === 0 ? 0 : indexOfFirstImage + 1} - {Math.min(indexOfLastImage, availableImages.length)} of {availableImages.length} photos
           </div>
 
@@ -175,7 +175,7 @@ const Gallery = () => {
             <button
               onClick={goToPreviousPage}
               disabled={currentPage === 1 || totalPages <= 1}
-              className="px-3 py-2 rounded-lg items-center justify-center bg-white border-2 border-earth-600 text-earth-600 font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-earth-50 transition-colors"
+              className="px-3 py-2 rounded-lg items-center justify-center bg-white dark:bg-slate-900 border-2 border-earth-600 text-earth-600 dark:text-earth-300 font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-earth-50 dark:hover:bg-slate-800 transition-colors"
             >
               <FaChevronLeft className="inline h-4 w-4 mb-1 mr-1" />
             </button>
@@ -197,7 +197,7 @@ const Gallery = () => {
                       className={`w-10 h-10 rounded-lg font-semibold transition-all ${
                         currentPage === pageNumber
                           ? 'bg-earth-600 text-white shadow-lg'
-                          : 'bg-white border-2 border-gray-300 text-gray-700 hover:border-earth-600 hover:text-earth-600'
+                          : 'bg-white dark:bg-slate-900 border-2 border-gray-300 dark:border-slate-700 text-gray-700 dark:text-gray-200 hover:border-earth-600 hover:text-earth-600 dark:hover:text-earth-300'
                       }`}
                     >
                       {pageNumber}
@@ -207,7 +207,7 @@ const Gallery = () => {
                   pageNumber === currentPage - 2 ||
                   pageNumber === currentPage + 2
                 ) {
-                  return <span key={pageNumber} className="flex items-center px-2 text-gray-400">...</span>
+                  return <span key={pageNumber} className="flex items-center px-2 text-gray-400 dark:text-gray-500">...</span>
                 }
                 return null
               })}
@@ -217,7 +217,7 @@ const Gallery = () => {
             <button
               onClick={goToNextPage}
               disabled={currentPage === totalPages || totalPages <= 1}
-              className="px-3 py-2 rounded-lg items-center justify-center bg-white border-2 border-earth-600 text-earth-600 font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-earth-50 transition-colors"
+              className="px-3 py-2 rounded-lg items-center justify-center bg-white dark:bg-slate-900 border-2 border-earth-600 text-earth-600 dark:text-earth-300 font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-earth-50 dark:hover:bg-slate-800 transition-colors"
             >
               <FaChevronRight className="inline h-4 w-4 mb-1 ml-1" />
             </button>
@@ -278,7 +278,7 @@ const Gallery = () => {
                 />
               </picture>
               <div className="text-center mt-6">
-                <p className="text-gray-400 text-sm">
+                <p className="text-gray-300 text-sm">
                   {currentIndex + 1} of {availableImages.length}
                 </p>
               </div>

@@ -5,13 +5,13 @@ const Footer = () => {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-earth-900 text-white">
+    <footer className="bg-earth-900 dark:bg-slate-950 text-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Company Info */}
           <div>
             <h3 className="text-2xl font-bold mb-4">M.WARREN CONSTRUCTION</h3>
-            <p className="text-gray-300 mb-4">
+            <p className="text-gray-300 dark:text-gray-400 mb-4">
               B100 General Contractor Specializing in New Home Builds, Remodels, Professional Landscapes and Retaining walls. 
               Serving Utah County with 15+ years of experience.
             </p>
@@ -22,13 +22,13 @@ const Footer = () => {
             <h4 className="text-xl font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#hero" className="text-gray-300 hover:text-white transition-colors">Home</a>
+                <a href="#hero" className="text-gray-300 dark:text-gray-400 hover:text-white transition-colors">Home</a>
               </li>
               <li>
-                <a href="#gallery" className="text-gray-300 hover:text-white transition-colors">Gallery</a>
+                <a href="#gallery" className="text-gray-300 dark:text-gray-400 hover:text-white transition-colors">Gallery</a>
               </li>
               <li>
-                <a href="#contact" className="text-gray-300 hover:text-white transition-colors">Contact</a>
+                <a href="#contact" className="text-gray-300 dark:text-gray-400 hover:text-white transition-colors">Contact</a>
               </li>
             </ul>
           </div>
@@ -39,21 +39,21 @@ const Footer = () => {
             <div className="space-y-3">
               <a 
                 href="tel:8013698515"
-                className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors"
+                className="flex items-center space-x-3 text-gray-300 dark:text-gray-400 hover:text-white transition-colors"
               >
                 <FaPhone />
                 <span>(801) 369-8515</span>
               </a>
               <a 
                 href="mailto:mikewarrenconstruction@outlook.com"
-                className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors"
+                className="flex items-center space-x-3 text-gray-300 dark:text-gray-400 hover:text-white transition-colors"
               >
                 <FaEnvelope />
                 <span>mikewarrenconstruction@outlook.com</span>
               </a>
             </div>
             <div className="mt-6">
-              <p className="text-gray-300 text-sm">
+              <p className="text-gray-300 dark:text-gray-400 text-sm">
                 Monday - Friday: 8:00 AM - 5:00 PM<br />
                 Saturday: Closed<br />
                 Sunday: Closed
@@ -63,11 +63,11 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-earth-700 pt-8 text-center">
-          <p className="text-gray-400 text-sm">
+        <div className="border-t border-earth-700 dark:border-slate-800 pt-8 text-center">
+          <p className="text-gray-400 dark:text-gray-500 text-sm">
             © {currentYear} M.WARREN CONSTRUCTION. All rights reserved. | Licensed B100 General Contractor
           </p>
-          <p className="text-gray-500 text-xs mt-2">
+          <p className="text-gray-500 dark:text-gray-600 text-xs mt-2">
             Serving Utah County & Surrounding Areas
           </p>
         </div>
