@@ -81,7 +81,12 @@ Professional portfolio website for M.WARREN CONSTRUCTION, a B100 General Contrac
 
 5. **Add Project Photos**
    
-   Place your actual project photos in `client/public/images/` and update the image URLs in `client/src/components/Gallery.jsx`
+   Place original photos in `client/assets/photos/original/` and run:
+   ```bash
+   cd client
+   npm run images:build
+   ```
+   This generates responsive gallery assets + metadata automatically.
 
 ## Running the Application
 
@@ -144,18 +149,10 @@ mwarren-construction/
 
 ### Adding Your Own Photos
 
-1. Place high-quality images in `client/public/images/`
-2. Update the `images` array in `client/src/components/Gallery.jsx`:
-   ```javascript
-   const images = [
-     {
-       url: '/images/project1.jpg',
-       title: 'Your Project Title',
-       description: 'Project description'
-     },
-     // Add more images...
-   ]
-   ```
+1. Add original images to `client/assets/photos/original/`
+2. Run `npm run images:build` from `client/`
+3. Gallery metadata in `client/src/data/gallery-images.json` is regenerated automatically
+4. Build/deploy with `npm run build` (optimizer runs automatically first)
 
 ### Changing Colors
 

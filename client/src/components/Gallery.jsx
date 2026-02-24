@@ -1,163 +1,45 @@
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+import galleryImages from '../data/gallery-images.json'
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState(null)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
+  const [brokenImageIds, setBrokenImageIds] = useState(new Set())
   const imagesPerPage = 12
   const baseUrl = import.meta.env.BASE_URL
+  const gridSizes = '(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
 
-  // M.WARREN CONSTRUCTION project photos
-  const images = [
-    { url: `${baseUrl}images/IMG_0217.jpeg`, title: 'Retaining Wall Project', description: 'Professional retaining wall installation' },
-    { url: `${baseUrl}images/IMG_0300.jpg`, title: 'Landscape Design', description: 'Custom landscape design and installation' },
-    { url: `${baseUrl}images/IMG_0302.JPG`, title: 'Hardscaping Work', description: 'Quality hardscaping and stone work' },
-    { url: `${baseUrl}images/IMG_0392.jpeg`, title: 'Outdoor Project', description: 'Professional outdoor construction' },
-    { url: `${baseUrl}images/IMG_0633.jpeg`, title: 'Stone Work', description: 'Expert stone masonry' },
-    { url: `${baseUrl}images/IMG_0674.JPG`, title: 'Retaining Wall', description: 'Durable retaining wall construction' },
-    { url: `${baseUrl}images/IMG_0675.JPG`, title: 'Landscaping Project', description: 'Complete landscaping transformation' },
-    { url: `${baseUrl}images/IMG_0676.JPG`, title: 'Construction Work', description: 'Professional construction services' },
-    { url: `${baseUrl}images/IMG_0802.jpeg`, title: 'Outdoor Installation', description: 'Quality outdoor installations' },
-    { url: `${baseUrl}images/IMG_0907.JPG`, title: 'Landscape Feature', description: 'Custom landscape features' },
-    { url: `${baseUrl}images/IMG_0913.JPG`, title: 'Hardscape Design', description: 'Professional hardscape design' },
-    { url: `${baseUrl}images/IMG_0914.JPG`, title: 'Stone Installation', description: 'Expert stone installation work' },
-    { url: `${baseUrl}images/IMG_0916.JPG`, title: 'Retaining Wall System', description: 'Multi-level retaining wall system' },
-    { url: `${baseUrl}images/IMG_0924.JPG`, title: 'Outdoor Project', description: 'Quality outdoor project completion' },
-    { url: `${baseUrl}images/IMG_0948.JPG`, title: 'Landscape Work', description: 'Professional landscape installation' },
-    { url: `${baseUrl}images/IMG_0949.JPG`, title: 'Construction Project', description: 'Expert construction services' },
-    { url: `${baseUrl}images/IMG_0951.JPG`, title: 'Hardscaping', description: 'Custom hardscaping solutions' },
-    { url: `${baseUrl}images/IMG_0972.JPG`, title: 'Stone Work', description: 'Quality stone masonry work' },
-    { url: `${baseUrl}images/IMG_0973.JPG`, title: 'Outdoor Feature', description: 'Custom outdoor features' },
-    { url: `${baseUrl}images/IMG_0978.JPG`, title: 'Landscape Project', description: 'Complete landscape project' },
-    { url: `${baseUrl}images/IMG_0982.JPG`, title: 'Retaining Wall', description: 'Professional retaining wall construction' },
-    { url: `${baseUrl}images/IMG_1087.JPG`, title: 'Construction Work', description: 'Quality construction services' },
-    { url: `${baseUrl}images/IMG_1133.jpeg`, title: 'Outdoor Installation', description: 'Professional outdoor installations' },
-    { url: `${baseUrl}images/IMG_1166.jpeg`, title: 'Landscape Design', description: 'Expert landscape design work' },
-    { url: `${baseUrl}images/IMG_1263.JPG`, title: 'Hardscape Project', description: 'Custom hardscape installation' },
-    { url: `${baseUrl}images/IMG_1264.JPG`, title: 'Stone Work', description: 'Professional stone work' },
-    { url: `${baseUrl}images/IMG_1265.JPG`, title: 'Outdoor Project', description: 'Quality outdoor projects' },
-    { url: `${baseUrl}images/IMG_1267.JPG`, title: 'Landscape Feature', description: 'Custom landscape features' },
-    { url: `${baseUrl}images/IMG_1268.JPG`, title: 'Construction Project', description: 'Expert construction work' },
-    { url: `${baseUrl}images/IMG_1275.JPG`, title: 'Retaining Wall', description: 'Durable retaining wall installation' },
-    { url: `${baseUrl}images/IMG_1306.JPG`, title: 'Hardscaping', description: 'Professional hardscaping services' },
-    { url: `${baseUrl}images/IMG_1377.JPG`, title: 'Landscape Work', description: 'Quality landscape installation' },
-    { url: `${baseUrl}images/IMG_1378.JPG`, title: 'Stone Installation', description: 'Expert stone installation' },
-    { url: `${baseUrl}images/IMG_1393.JPG`, title: 'Outdoor Feature', description: 'Custom outdoor features' },
-    { url: `${baseUrl}images/IMG_1394.JPG`, title: 'Construction Work', description: 'Professional construction services' },
-    { url: `${baseUrl}images/IMG_1402.JPG`, title: 'Landscape Project', description: 'Complete landscape transformation' },
-    { url: `${baseUrl}images/IMG_1539.jpeg`, title: 'Retaining Wall', description: 'Quality retaining wall work' },
-    { url: `${baseUrl}images/IMG_1587.JPG`, title: 'Hardscape Design', description: 'Custom hardscape design' },
-    { url: `${baseUrl}images/IMG_1588.JPG`, title: 'Stone Work', description: 'Professional stone masonry' },
-    { url: `${baseUrl}images/IMG_1589.JPG`, title: 'Outdoor Project', description: 'Expert outdoor installations' },
-    { url: `${baseUrl}images/IMG_1590.JPG`, title: 'Landscape Feature', description: 'Custom landscape features' },
-    { url: `${baseUrl}images/IMG_1591.JPG`, title: 'Construction Project', description: 'Quality construction work' },
-    { url: `${baseUrl}images/IMG_1618.jpeg`, title: 'Retaining Wall', description: 'Professional retaining wall construction' },
-    { url: `${baseUrl}images/IMG_1620.JPG`, title: 'Hardscaping Work', description: 'Expert hardscaping services' },
-    { url: `${baseUrl}images/IMG_1622.JPG`, title: 'Landscape Installation', description: 'Professional landscape work' },
-    { url: `${baseUrl}images/IMG_1850.JPG`, title: 'Stone Project', description: 'Quality stone work' },
-    { url: `${baseUrl}images/IMG_1856.jpeg`, title: 'Outdoor Feature', description: 'Custom outdoor installations' },
-    { url: `${baseUrl}images/IMG_1871.jpeg`, title: 'Construction Work', description: 'Expert construction services' },
-    { url: `${baseUrl}images/IMG_1913.JPG`, title: 'Landscape Project', description: 'Complete landscape solutions' },
-    { url: `${baseUrl}images/IMG_2024.jpeg`, title: 'Retaining Wall', description: 'Durable retaining wall systems' },
-    { url: `${baseUrl}images/IMG_2202.JPG`, title: 'Hardscape Design', description: 'Professional hardscape work' },
-    { url: `${baseUrl}images/IMG_2232.jpg`, title: 'Stone Installation', description: 'Expert stone installation' },
-    { url: `${baseUrl}images/IMG_2233.JPG`, title: 'Outdoor Project', description: 'Quality outdoor projects' },
-    { url: `${baseUrl}images/IMG_2234.JPG`, title: 'Landscape Work', description: 'Professional landscaping' },
-    { url: `${baseUrl}images/IMG_2262.JPG`, title: 'Construction Project', description: 'Expert construction work' },
-    { url: `${baseUrl}images/IMG_2522.JPG`, title: 'Retaining Wall', description: 'Professional retaining wall construction' },
-    { url: `${baseUrl}images/IMG_2544.jpg`, title: 'Hardscaping', description: 'Custom hardscaping solutions' },
-    { url: `${baseUrl}images/IMG_2734.JPG`, title: 'Stone Work', description: 'Quality stone masonry' },
-    { url: `${baseUrl}images/IMG_2735.JPG`, title: 'Outdoor Feature', description: 'Custom outdoor features' },
-    { url: `${baseUrl}images/IMG_2753.JPG`, title: 'Landscape Project', description: 'Complete landscape installation' },
-    { url: `${baseUrl}images/IMG_2762.JPG`, title: 'Construction Work', description: 'Professional construction services' },
-    { url: `${baseUrl}images/IMG_2804.JPG`, title: 'Retaining Wall', description: 'Expert retaining wall work' },
-    { url: `${baseUrl}images/IMG_3433.jpeg`, title: 'Hardscape Design', description: 'Custom hardscape design' },
-    { url: `${baseUrl}images/IMG_3434.jpeg`, title: 'Stone Installation', description: 'Professional stone work' },
-    { url: `${baseUrl}images/IMG_3613.jpeg`, title: 'Outdoor Project', description: 'Quality outdoor installations' },
-    { url: `${baseUrl}images/IMG_3614.jpeg`, title: 'Landscape Feature', description: 'Custom landscape features' },
-    { url: `${baseUrl}images/IMG_3616.JPG`, title: 'Construction Project', description: 'Expert construction work' },
-    { url: `${baseUrl}images/IMG_3628.JPG`, title: 'Retaining Wall', description: 'Professional retaining wall construction' },
-    { url: `${baseUrl}images/IMG_3632.jpeg`, title: 'Hardscaping Work', description: 'Quality hardscaping services' },
-    { url: `${baseUrl}images/IMG_3697.JPG`, title: 'Landscape Installation', description: 'Expert landscape work' },
-    { url: `${baseUrl}images/IMG_3970.jpeg`, title: 'Stone Project', description: 'Professional stone masonry' },
-    { url: `${baseUrl}images/IMG_4011.JPG`, title: 'Outdoor Feature', description: 'Custom outdoor installations' },
-    { url: `${baseUrl}images/IMG_4213.JPG`, title: 'Construction Work', description: 'Quality construction services' },
-    { url: `${baseUrl}images/IMG_4256.jpeg`, title: 'Landscape Project', description: 'Complete landscape transformation' },
-    { url: `${baseUrl}images/IMG_4257.jpg`, title: 'Retaining Wall', description: 'Durable retaining wall systems' },
-    { url: `${baseUrl}images/IMG_4319.JPG`, title: 'Hardscape Design', description: 'Professional hardscape work' },
-    { url: `${baseUrl}images/IMG_4353.JPG`, title: 'Stone Installation', description: 'Expert stone installation' },
-    { url: `${baseUrl}images/IMG_4355.JPG`, title: 'Outdoor Project', description: 'Quality outdoor projects' },
-    { url: `${baseUrl}images/IMG_4356.JPG`, title: 'Landscape Work', description: 'Professional landscaping' },
-    { url: `${baseUrl}images/IMG_4444.jpeg`, title: 'Construction Project', description: 'Expert construction work' },
-    { url: `${baseUrl}images/IMG_4466.jpeg`, title: 'Retaining Wall', description: 'Professional retaining wall construction' },
-    { url: `${baseUrl}images/IMG_4467.jpeg`, title: 'Hardscaping', description: 'Custom hardscaping solutions' },
-    { url: `${baseUrl}images/IMG_4476.JPG`, title: 'Stone Work', description: 'Quality stone masonry' },
-    { url: `${baseUrl}images/IMG_4493.JPG`, title: 'Outdoor Feature', description: 'Custom outdoor features' },
-    { url: `${baseUrl}images/IMG_4501.JPG`, title: 'Landscape Project', description: 'Complete landscape installation' },
-    { url: `${baseUrl}images/IMG_4504.JPG`, title: 'Construction Work', description: 'Professional construction services' },
-    { url: `${baseUrl}images/IMG_4505.JPG`, title: 'Retaining Wall', description: 'Expert retaining wall work' },
-    { url: `${baseUrl}images/IMG_4647.jpeg`, title: 'Hardscape Design', description: 'Custom hardscape design' },
-    { url: `${baseUrl}images/IMG_4779.jpeg`, title: 'Stone Installation', description: 'Professional stone work' },
-    { url: `${baseUrl}images/IMG_4792.JPG`, title: 'Outdoor Project', description: 'Quality outdoor installations' },
-    { url: `${baseUrl}images/IMG_4855.jpeg`, title: 'Landscape Feature', description: 'Custom landscape features' },
-    { url: `${baseUrl}images/IMG_4886.jpeg`, title: 'Construction Project', description: 'Expert construction work' },
-    { url: `${baseUrl}images/IMG_4887.jpeg`, title: 'Retaining Wall', description: 'Professional retaining wall construction' },
-    { url: `${baseUrl}images/IMG_4888.jpeg`, title: 'Hardscaping Work', description: 'Quality hardscaping services' },
-    { url: `${baseUrl}images/IMG_4889.jpeg`, title: 'Landscape Installation', description: 'Expert landscape work' },
-    { url: `${baseUrl}images/IMG_5026.jpeg`, title: 'Stone Project', description: 'Professional stone masonry' },
-    { url: `${baseUrl}images/IMG_5079.jpeg`, title: 'Outdoor Feature', description: 'Custom outdoor installations' },
-    { url: `${baseUrl}images/IMG_5080.jpeg`, title: 'Construction Work', description: 'Quality construction services' },
-    { url: `${baseUrl}images/IMG_5081.jpeg`, title: 'Landscape Project', description: 'Complete landscape transformation' },
-    { url: `${baseUrl}images/IMG_5082.jpeg`, title: 'Retaining Wall', description: 'Durable retaining wall systems' },
-    { url: `${baseUrl}images/IMG_5083.jpeg`, title: 'Hardscape Design', description: 'Professional hardscape work' },
-    { url: `${baseUrl}images/IMG_5204.jpeg`, title: 'Stone Installation', description: 'Expert stone installation' },
-    { url: `${baseUrl}images/IMG_5282.jpeg`, title: 'Outdoor Project', description: 'Quality outdoor projects' },
-    { url: `${baseUrl}images/IMG_5292.jpeg`, title: 'Landscape Work', description: 'Professional landscaping' },
-    { url: `${baseUrl}images/IMG_5299.jpeg`, title: 'Construction Project', description: 'Expert construction work' },
-    { url: `${baseUrl}images/IMG_5301.jpeg`, title: 'Retaining Wall', description: 'Professional retaining wall construction' },
-    { url: `${baseUrl}images/IMG_5302.jpeg`, title: 'Hardscaping', description: 'Custom hardscaping solutions' },
-    { url: `${baseUrl}images/IMG_5464.jpeg`, title: 'Stone Work', description: 'Quality stone masonry' },
-    { url: `${baseUrl}images/IMG_5700.jpeg`, title: 'Outdoor Feature', description: 'Custom outdoor features' },
-    { url: `${baseUrl}images/IMG_5734.jpeg`, title: 'Landscape Project', description: 'Complete landscape installation' },
-    { url: `${baseUrl}images/IMG_5799.jpeg`, title: 'Construction Work', description: 'Professional construction services' },
-    { url: `${baseUrl}images/IMG_5927.jpeg`, title: 'Retaining Wall', description: 'Expert retaining wall work' },
-    { url: `${baseUrl}images/IMG_6345.jpeg`, title: 'Hardscape Design', description: 'Custom hardscape design' },
-    { url: `${baseUrl}images/IMG_6355.jpeg`, title: 'Stone Installation', description: 'Professional stone work' },
-    { url: `${baseUrl}images/IMG_6357.jpeg`, title: 'Outdoor Project', description: 'Quality outdoor installations' },
-    { url: `${baseUrl}images/IMG_6754.jpeg`, title: 'Landscape Feature', description: 'Custom landscape features' },
-    { url: `${baseUrl}images/IMG_6766.jpeg`, title: 'Construction Project', description: 'Expert construction work' },
-    { url: `${baseUrl}images/IMG_6779.jpg`, title: 'Retaining Wall', description: 'Professional retaining wall construction' },
-    { url: `${baseUrl}images/IMG_6811.jpg`, title: 'Hardscaping Work', description: 'Quality hardscaping services' },
-    { url: `${baseUrl}images/IMG_6834.jpeg`, title: 'Landscape Installation', description: 'Expert landscape work' },
-    { url: `${baseUrl}images/IMG_7091.jpeg`, title: 'Stone Project', description: 'Professional stone masonry' },
-    { url: `${baseUrl}images/IMG_7268.jpeg`, title: 'Outdoor Feature', description: 'Custom outdoor installations' },
-    { url: `${baseUrl}images/IMG_8480.jpeg`, title: 'Construction Work', description: 'Quality construction services' },
-    { url: `${baseUrl}images/IMG_8482.jpeg`, title: 'Landscape Project', description: 'Complete landscape transformation' },
-    { url: `${baseUrl}images/IMG_8581.jpeg`, title: 'Retaining Wall', description: 'Durable retaining wall systems' },
-    { url: `${baseUrl}images/IMG_8582.jpeg`, title: 'Hardscape Design', description: 'Professional hardscape work' },
-    { url: `${baseUrl}images/IMG_8583.jpeg`, title: 'Stone Installation', description: 'Expert stone installation' },
-    { url: `${baseUrl}images/IMG_8920.jpeg`, title: 'Outdoor Project', description: 'Quality outdoor projects' },
-    { url: `${baseUrl}images/IMG_8926.jpeg`, title: 'Landscape Work', description: 'Professional landscaping' },
-    { url: `${baseUrl}images/IMG_9124.jpeg`, title: 'Construction Project', description: 'Expert construction work' },
-    { url: `${baseUrl}images/IMG_9285.jpeg`, title: 'Retaining Wall', description: 'Professional retaining wall construction' },
-    { url: `${baseUrl}images/IMG_9429.jpeg`, title: 'Hardscaping', description: 'Custom hardscaping solutions' },
-    { url: `${baseUrl}images/IMG_9430.jpeg`, title: 'Stone Work', description: 'Quality stone masonry' },
-    { url: `${baseUrl}images/20220827_090510.jpg`, title: 'Landscape Feature', description: 'Custom landscape features' },
-    { url: `${baseUrl}images/20220827_090516.jpg`, title: 'Outdoor Installation', description: 'Professional outdoor work' },
-    { url: `${baseUrl}images/FullSizeRender.jpeg`, title: 'Construction Project', description: 'Quality construction services' },
-    { url: `${baseUrl}images/FullSizeRender (1).jpeg`, title: 'Retaining Wall Work', description: 'Expert retaining wall construction' },
-    { url: `${baseUrl}images/FullSizeRender (2).jpeg`, title: 'Hardscape Project', description: 'Professional hardscaping' },
-    { url: `${baseUrl}images/FullSizeRender (3).jpeg`, title: 'Landscape Design', description: 'Custom landscape design' },
-    { url: `${baseUrl}images/FullSizeRender (4).jpeg`, title: 'Stone Installation', description: 'Quality stone work' },
-    { url: `${baseUrl}images/FullSizeRender (5).jpeg`, title: 'Outdoor Feature', description: 'Custom outdoor features' },
-    { url: `${baseUrl}images/Attachment.jpg`, title: 'Construction Work', description: 'Professional construction services' },
-    { url: `${baseUrl}images/Attachment (1).jpg`, title: 'Landscape Project', description: 'Complete landscape transformation' }
-  ]
+  const toAbsoluteUrl = (relativeUrl) => `${baseUrl}${relativeUrl}`
+
+  const toSrcSet = (variants) => variants.map((variant) => `${toAbsoluteUrl(variant.url)} ${variant.width}w`).join(', ')
+
+  const getLargestVariant = (variants) => variants[variants.length - 1]
+
+  const getBestDefaultVariant = (variants, preferredWidth = 400) => {
+    const firstLarger = variants.find((variant) => variant.width >= preferredWidth)
+    return firstLarger || getLargestVariant(variants)
+  }
+
+  const images = useMemo(() => {
+    return galleryImages.filter(
+      (image) =>
+        image &&
+        image.id &&
+        Array.isArray(image.avif) &&
+        image.avif.length > 0 &&
+        Array.isArray(image.webp) &&
+        image.webp.length > 0
+    )
+  }, [])
+
+  const availableImages = images.filter((image) => !brokenImageIds.has(image.id))
 
   const openLightbox = (index) => {
+    if (!availableImages[index]) return
     setCurrentIndex(index)
-    setSelectedImage(images[index])
+    setSelectedImage(availableImages[index])
   }
 
   const closeLightbox = () => {
@@ -165,22 +47,50 @@ const Gallery = () => {
   }
 
   const goToPrevious = () => {
-    const newIndex = currentIndex === 0 ? images.length - 1 : currentIndex - 1
+    if (availableImages.length === 0) return
+    const newIndex = currentIndex === 0 ? availableImages.length - 1 : currentIndex - 1
     setCurrentIndex(newIndex)
-    setSelectedImage(images[newIndex])
+    setSelectedImage(availableImages[newIndex])
   }
 
   const goToNext = () => {
-    const newIndex = currentIndex === images.length - 1 ? 0 : currentIndex + 1
+    if (availableImages.length === 0) return
+    const newIndex = currentIndex === availableImages.length - 1 ? 0 : currentIndex + 1
     setCurrentIndex(newIndex)
-    setSelectedImage(images[newIndex])
+    setSelectedImage(availableImages[newIndex])
+  }
+
+  const handleImageError = (imageId) => {
+    setBrokenImageIds((previousIds) => {
+      if (previousIds.has(imageId)) {
+        return previousIds
+      }
+
+      const nextIds = new Set(previousIds)
+      nextIds.add(imageId)
+      return nextIds
+    })
   }
 
   // Pagination logic
-  const totalPages = Math.ceil(images.length / imagesPerPage)
+  const totalPages = Math.ceil(availableImages.length / imagesPerPage)
   const indexOfLastImage = currentPage * imagesPerPage
   const indexOfFirstImage = indexOfLastImage - imagesPerPage
-  const currentImages = images.slice(indexOfFirstImage, indexOfLastImage)
+  const currentImages = availableImages.slice(indexOfFirstImage, indexOfLastImage)
+
+  useEffect(() => {
+    if (totalPages > 0 && currentPage > totalPages) {
+      setCurrentPage(totalPages)
+    }
+  }, [currentPage, totalPages])
+
+  useEffect(() => {
+    if (!selectedImage) return
+    const selectedStillAvailable = availableImages.some((image) => image.id === selectedImage.id)
+    if (!selectedStillAvailable) {
+      setSelectedImage(null)
+    }
+  }, [availableImages, selectedImage])
 
   const goToPage = (pageNumber) => {
     setCurrentPage(pageNumber)
@@ -214,21 +124,38 @@ const Gallery = () => {
 
         {/* Gallery Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {availableImages.length === 0 && (
+            <div className="col-span-full text-center text-gray-500 py-16 bg-white rounded-lg border border-gray-200">
+              No gallery photos are available yet.
+            </div>
+          )}
+
           {currentImages.map((image, index) => {
             const actualIndex = indexOfFirstImage + index
+            const webpDefault = getBestDefaultVariant(image.webp)
             return (
               <div 
-                key={actualIndex}
+                key={image.id}
                 className="group relative overflow-hidden rounded-lg shadow-lg cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
                 onClick={() => openLightbox(actualIndex)}
               >
                 <div className="aspect-w-16 aspect-h-12 bg-gray-200">
-                  <img 
-                    src={image.url} 
-                    alt={image.title}
-                    className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
-                    loading="lazy"
-                  />
+                  <picture>
+                    <source type="image/avif" srcSet={toSrcSet(image.avif)} sizes={gridSizes} />
+                    <source type="image/webp" srcSet={toSrcSet(image.webp)} sizes={gridSizes} />
+                    <img
+                      src={toAbsoluteUrl(webpDefault.url)}
+                      srcSet={toSrcSet(image.webp)}
+                      sizes={gridSizes}
+                      alt={image.alt || image.title}
+                      className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
+                      loading="lazy"
+                      decoding="async"
+                      width={webpDefault.width}
+                      height={Math.round((webpDefault.width / image.width) * image.height)}
+                      onError={() => handleImageError(image.id)}
+                    />
+                  </picture>
                 </div>
               </div>
             )
@@ -239,7 +166,7 @@ const Gallery = () => {
         <div className="mt-12 flex flex-col items-center gap-6">
           {/* Page Info */}
           <div className="text-gray-600 text-sm">
-            Showing {indexOfFirstImage + 1} - {Math.min(indexOfLastImage, images.length)} of {images.length} photos
+            Showing {availableImages.length === 0 ? 0 : indexOfFirstImage + 1} - {Math.min(indexOfLastImage, availableImages.length)} of {availableImages.length} photos
           </div>
 
           {/* Pagination Buttons */}
@@ -247,7 +174,7 @@ const Gallery = () => {
             {/* Previous Button */}
             <button
               onClick={goToPreviousPage}
-              disabled={currentPage === 1}
+              disabled={currentPage === 1 || totalPages <= 1}
               className="px-3 py-2 rounded-lg items-center justify-center bg-white border-2 border-earth-600 text-earth-600 font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-earth-50 transition-colors"
             >
               <FaChevronLeft className="inline h-4 w-4 mb-1 mr-1" />
@@ -289,7 +216,7 @@ const Gallery = () => {
             {/* Next Button */}
             <button
               onClick={goToNextPage}
-              disabled={currentPage === totalPages}
+              disabled={currentPage === totalPages || totalPages <= 1}
               className="px-3 py-2 rounded-lg items-center justify-center bg-white border-2 border-earth-600 text-earth-600 font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-earth-50 transition-colors"
             >
               <FaChevronRight className="inline h-4 w-4 mb-1 ml-1" />
@@ -338,14 +265,21 @@ const Gallery = () => {
               className="max-w-6xl max-h-full"
               onClick={(e) => e.stopPropagation()}
             >
-              <img 
-                src={selectedImage.url} 
-                alt={selectedImage.title}
-                className="max-w-full max-h-[80vh] object-contain rounded-lg"
-              />
+              <picture>
+                <source type="image/avif" srcSet={toSrcSet(selectedImage.avif)} sizes="100vw" />
+                <source type="image/webp" srcSet={toSrcSet(selectedImage.webp)} sizes="100vw" />
+                <img
+                  src={toAbsoluteUrl(getLargestVariant(selectedImage.webp).url)}
+                  srcSet={toSrcSet(selectedImage.webp)}
+                  sizes="100vw"
+                  alt={selectedImage.alt || selectedImage.title}
+                  className="max-w-full max-h-[80vh] object-contain rounded-lg"
+                  decoding="async"
+                />
+              </picture>
               <div className="text-center mt-6">
                 <p className="text-gray-400 text-sm">
-                  {currentIndex + 1} of {images.length}
+                  {currentIndex + 1} of {availableImages.length}
                 </p>
               </div>
             </div>
