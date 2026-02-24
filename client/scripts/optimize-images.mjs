@@ -22,7 +22,7 @@ const QUALITY = {
   webp: 80
 }
 
-const CONFIG_VERSION = 'v1'
+const CONFIG_VERSION = 'v2'
 const CONFIG_FINGERPRINT = JSON.stringify({
   CONFIG_VERSION,
   RESPONSIVE_WIDTHS,
@@ -32,6 +32,10 @@ const CONFIG_FINGERPRINT = JSON.stringify({
 const LEGACY_EXCLUDED_FILES = new Set(['mwarren-profile-photo.png'])
 
 const normalizePath = (value) => value.split(path.sep).join('/')
+
+const getExtensionTag = (ext) => ext.replace(/^\./, '').toLowerCase()
+
+const getStableImageId = (relativePath) => normalizePath(relativePath).replace(/[/.]/g, '-')
 
 const makeTitle = (filenameWithoutExt) => {
   return filenameWithoutExt
@@ -139,6 +143,7 @@ const createVariantObject = (relativeDir, baseName, width, format) => {
 const buildMetadataItem = ({
   relativePath,
   parsedPath,
+  outputBaseName,
   width,
   height,
   widths
@@ -147,11 +152,11 @@ const buildMetadataItem = ({
   const baseName = parsedPath.name
   const title = makeTitle(baseName)
 
-  const avif = widths.map((variantWidth) => createVariantObject(normalizedDir, baseName, variantWidth, 'avif'))
-  const webp = widths.map((variantWidth) => createVariantObject(normalizedDir, baseName, variantWidth, 'webp'))
+  const avif = widths.map((variantWidth) => createVariantObject(normalizedDir, outputBaseName, variantWidth, 'avif'))
+  const webp = widths.map((variantWidth) => createVariantObject(normalizedDir, outputBaseName, variantWidth, 'webp'))
 
   return {
-    id: normalizePath(path.parse(relativePath).dir ? `${path.parse(relativePath).dir}/${baseName}` : baseName).replace(/\//g, '-'),
+    id: getStableImageId(relativePath),
     relativePath: normalizePath(relativePath),
     title,
     description: 'Professional project by M.WARREN CONSTRUCTION',
@@ -164,7 +169,7 @@ const buildMetadataItem = ({
   }
 }
 
-const generateVariants = async ({ sourcePath, parsedPath, widths }) => {
+const generateVariants = async ({ sourcePath, parsedPath, outputBaseName, widths }) => {
   const relativeDir = parsedPath.dir ? normalizePath(parsedPath.dir) : ''
   const outputFolder = path.join(OUTPUT_DIR, relativeDir)
   await fs.mkdir(outputFolder, { recursive: true })
@@ -172,7 +177,7 @@ const generateVariants = async ({ sourcePath, parsedPath, widths }) => {
   const generatedFiles = []
 
   for (const variantWidth of widths) {
-    const outputBase = path.join(outputFolder, `${parsedPath.name}@${variantWidth}w`)
+    const outputBase = path.join(outputFolder, `${outputBaseName}@${variantWidth}w`)
 
     const avifPath = `${outputBase}.avif`
     await sharp(sourcePath)
@@ -217,6 +222,14 @@ const allGeneratedFilesExist = async (files) => {
   return true
 }
 
+const buildOutputBaseName = (parsedPath, needsDisambiguation) => {
+  if (!needsDisambiguation) {
+    return parsedPath.name
+  }
+
+  return `${parsedPath.name}__${getExtensionTag(parsedPath.ext)}`
+}
+
 const main = async () => {
   await ensureDirectories()
   const manifest = await readManifest()
@@ -237,6 +250,14 @@ const main = async () => {
   }
 
   const sortedFiles = files.sort((first, second) => first.localeCompare(second))
+  const basenameCounts = new Map()
+
+  for (const sourcePath of sortedFiles) {
+    const relativePath = normalizePath(path.relative(rootDir, sourcePath))
+    const parsedPath = path.parse(relativePath)
+    const collisionKey = `${parsedPath.dir}|${parsedPath.name}`
+    basenameCounts.set(collisionKey, (basenameCounts.get(collisionKey) || 0) + 1)
+  }
 
   const galleryItems = []
   const keptGeneratedFiles = new Set()
@@ -247,6 +268,9 @@ const main = async () => {
   for (const sourcePath of sortedFiles) {
     const relativePath = normalizePath(path.relative(rootDir, sourcePath))
     const parsedPath = path.parse(relativePath)
+    const collisionKey = `${parsedPath.dir}|${parsedPath.name}`
+    const needsDisambiguation = (basenameCounts.get(collisionKey) || 0) > 1
+    const outputBaseName = buildOutputBaseName(parsedPath, needsDisambiguation)
 
     try {
       const fileHash = await hashFileWithConfig(sourcePath)
@@ -270,6 +294,7 @@ const main = async () => {
         generatedFiles = await generateVariants({
           sourcePath,
           parsedPath,
+          outputBaseName,
           widths: variantWidths
         })
         processedCount += 1
@@ -292,6 +317,7 @@ const main = async () => {
         buildMetadataItem({
           relativePath,
           parsedPath,
+          outputBaseName,
           width: imageMeta.width,
           height: imageMeta.height,
           widths: variantWidths

@@ -7,9 +7,18 @@ const Gallery = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const [brokenImageIds, setBrokenImageIds] = useState(new Set())
-  const imagesPerPage = 12
+  const [imagesPerPage, setImagesPerPage] = useState(10)
   const baseUrl = import.meta.env.BASE_URL
-  const gridSizes = '(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
+  const gridSizes = '(max-width: 639px) 100vw, (max-width: 767px) 50vw, (max-width: 1023px) 33vw, 20vw'
+
+  const getImagesPerPageForWidth = (width) => {
+    if (width >= 1024) return 10
+    if (width >= 768) return 6
+    if (width >= 640) return 4
+    return 1
+  }
+
+  const getImageKey = (image) => image.relativePath || image.id
 
   const toAbsoluteUrl = (relativeUrl) => `${baseUrl}${relativeUrl}`
 
@@ -34,7 +43,7 @@ const Gallery = () => {
     )
   }, [])
 
-  const availableImages = images.filter((image) => !brokenImageIds.has(image.id))
+  const availableImages = images.filter((image) => !brokenImageIds.has(getImageKey(image)))
 
   const openLightbox = (index) => {
     if (!availableImages[index]) return
@@ -60,14 +69,14 @@ const Gallery = () => {
     setSelectedImage(availableImages[newIndex])
   }
 
-  const handleImageError = (imageId) => {
+  const handleImageError = (imageKey) => {
     setBrokenImageIds((previousIds) => {
-      if (previousIds.has(imageId)) {
+      if (previousIds.has(imageKey)) {
         return previousIds
       }
 
       const nextIds = new Set(previousIds)
-      nextIds.add(imageId)
+      nextIds.add(imageKey)
       return nextIds
     })
   }
@@ -77,6 +86,18 @@ const Gallery = () => {
   const indexOfLastImage = currentPage * imagesPerPage
   const indexOfFirstImage = indexOfLastImage - imagesPerPage
   const currentImages = availableImages.slice(indexOfFirstImage, indexOfLastImage)
+  const isMobileSingleImage = imagesPerPage === 1
+
+  useEffect(() => {
+    const updateImagesPerPage = () => {
+      setImagesPerPage(getImagesPerPageForWidth(window.innerWidth))
+    }
+
+    updateImagesPerPage()
+    window.addEventListener('resize', updateImagesPerPage)
+
+    return () => window.removeEventListener('resize', updateImagesPerPage)
+  }, [])
 
   useEffect(() => {
     if (totalPages > 0 && currentPage > totalPages) {
@@ -86,15 +107,18 @@ const Gallery = () => {
 
   useEffect(() => {
     if (!selectedImage) return
-    const selectedStillAvailable = availableImages.some((image) => image.id === selectedImage.id)
+    const selectedStillAvailable = availableImages.some((image) => getImageKey(image) === getImageKey(selectedImage))
     if (!selectedStillAvailable) {
       setSelectedImage(null)
     }
   }, [availableImages, selectedImage])
 
-  const goToPage = (pageNumber) => {
+  const goToPage = (pageNumber, shouldScroll = true) => {
     setCurrentPage(pageNumber)
-    window.scrollTo({ top: document.getElementById('gallery').offsetTop - 100, behavior: 'smooth' })
+
+    if (shouldScroll) {
+      window.scrollTo({ top: document.getElementById('gallery').offsetTop - 100, behavior: 'smooth' })
+    }
   }
 
   const goToPreviousPage = () => {
@@ -123,7 +147,7 @@ const Gallery = () => {
         </div>
 
         {/* Gallery Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {availableImages.length === 0 && (
             <div className="col-span-full text-center text-gray-500 dark:text-gray-400 py-16 bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-800">
               No gallery photos are available yet.
@@ -135,11 +159,11 @@ const Gallery = () => {
             const webpDefault = getBestDefaultVariant(image.webp)
             return (
               <div 
-                key={image.id}
+                key={getImageKey(image)}
                 className="group relative overflow-hidden rounded-lg shadow-lg cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
                 onClick={() => openLightbox(actualIndex)}
               >
-                <div className="aspect-w-16 aspect-h-12 bg-gray-200">
+                <div className="aspect-square bg-gray-200">
                   <picture>
                     <source type="image/avif" srcSet={toSrcSet(image.avif)} sizes={gridSizes} />
                     <source type="image/webp" srcSet={toSrcSet(image.webp)} sizes={gridSizes} />
@@ -148,12 +172,12 @@ const Gallery = () => {
                       srcSet={toSrcSet(image.webp)}
                       sizes={gridSizes}
                       alt={image.alt || image.title}
-                      className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                       loading="lazy"
                       decoding="async"
                       width={webpDefault.width}
                       height={Math.round((webpDefault.width / image.width) * image.height)}
-                      onError={() => handleImageError(image.id)}
+                      onError={() => handleImageError(getImageKey(image))}
                     />
                   </picture>
                 </div>
@@ -169,59 +193,91 @@ const Gallery = () => {
             Showing {availableImages.length === 0 ? 0 : indexOfFirstImage + 1} - {Math.min(indexOfLastImage, availableImages.length)} of {availableImages.length} photos
           </div>
 
-          {/* Pagination Buttons */}
-          <div className="flex items-center gap-2">
-            {/* Previous Button */}
-            <button
-              onClick={goToPreviousPage}
-              disabled={currentPage === 1 || totalPages <= 1}
-              className="px-3 py-2 rounded-lg items-center justify-center bg-white dark:bg-slate-900 border-2 border-earth-600 text-earth-600 dark:text-earth-300 font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-earth-50 dark:hover:bg-slate-800 transition-colors"
-            >
-              <FaChevronLeft className="inline h-4 w-4 mb-1 mr-1" />
-            </button>
-
-            {/* Page Numbers */}
-            <div className="flex gap-2">
-              {[...Array(totalPages)].map((_, index) => {
-                const pageNumber = index + 1
-                // Show first page, last page, current page, and pages around current
-                if (
-                  pageNumber === 1 ||
-                  pageNumber === totalPages ||
-                  (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
-                ) {
+          {isMobileSingleImage ? (
+            <div className="w-full">
+              <div className="flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory">
+                {availableImages.map((image, index) => {
+                  const pageNumber = index + 1
+                  const thumbnailVariant = getBestDefaultVariant(image.webp, 400)
                   return (
                     <button
-                      key={pageNumber}
-                      onClick={() => goToPage(pageNumber)}
-                      className={`w-10 h-10 rounded-lg font-semibold transition-all ${
+                      key={`mobile-thumb-${getImageKey(image)}`}
+                      onClick={() => goToPage(pageNumber, false)}
+                      className={`shrink-0 w-14 h-14 rounded-md overflow-hidden border-2 transition-colors snap-start ${
                         currentPage === pageNumber
-                          ? 'bg-earth-600 text-white shadow-lg'
-                          : 'bg-white dark:bg-slate-900 border-2 border-gray-300 dark:border-slate-700 text-gray-700 dark:text-gray-200 hover:border-earth-600 hover:text-earth-600 dark:hover:text-earth-300'
+                          ? 'border-earth-600'
+                          : 'border-gray-300 dark:border-slate-700'
                       }`}
+                      aria-label={`Go to photo ${pageNumber}`}
                     >
-                      {pageNumber}
+                      <img
+                        src={toAbsoluteUrl(thumbnailVariant.url)}
+                        alt={image.alt || image.title}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                        fetchPriority="low"
+                        width="56"
+                        height="56"
+                      />
                     </button>
                   )
-                } else if (
-                  pageNumber === currentPage - 2 ||
-                  pageNumber === currentPage + 2
-                ) {
-                  return <span key={pageNumber} className="flex items-center px-2 text-gray-400 dark:text-gray-500">...</span>
-                }
-                return null
-              })}
+                })}
+              </div>
             </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              {/* Previous Button */}
+              <button
+                onClick={goToPreviousPage}
+                disabled={currentPage === 1 || totalPages <= 1}
+                className="px-3 py-2 rounded-lg items-center justify-center bg-white dark:bg-slate-900 border-2 border-earth-600 text-earth-600 dark:text-earth-300 font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-earth-50 dark:hover:bg-slate-800 transition-colors"
+              >
+                <FaChevronLeft className="inline h-4 w-4 mb-1 mr-1" />
+              </button>
 
-            {/* Next Button */}
-            <button
-              onClick={goToNextPage}
-              disabled={currentPage === totalPages || totalPages <= 1}
-              className="px-3 py-2 rounded-lg items-center justify-center bg-white dark:bg-slate-900 border-2 border-earth-600 text-earth-600 dark:text-earth-300 font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-earth-50 dark:hover:bg-slate-800 transition-colors"
-            >
-              <FaChevronRight className="inline h-4 w-4 mb-1 ml-1" />
-            </button>
-          </div>
+              {/* Page Numbers */}
+              <div className="flex gap-2">
+                {[...Array(totalPages)].map((_, index) => {
+                  const pageNumber = index + 1
+                  if (
+                    pageNumber === 1 ||
+                    pageNumber === totalPages ||
+                    (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
+                  ) {
+                    return (
+                      <button
+                        key={pageNumber}
+                        onClick={() => goToPage(pageNumber)}
+                        className={`w-10 h-10 rounded-lg font-semibold transition-all ${
+                          currentPage === pageNumber
+                            ? 'bg-earth-600 text-white shadow-lg'
+                            : 'bg-white dark:bg-slate-900 border-2 border-gray-300 dark:border-slate-700 text-gray-700 dark:text-gray-200 hover:border-earth-600 hover:text-earth-600 dark:hover:text-earth-300'
+                        }`}
+                      >
+                        {pageNumber}
+                      </button>
+                    )
+                  } else if (
+                    pageNumber === currentPage - 2 ||
+                    pageNumber === currentPage + 2
+                  ) {
+                    return <span key={pageNumber} className="flex items-center px-2 text-gray-400 dark:text-gray-500">...</span>
+                  }
+                  return null
+                })}
+              </div>
+
+              {/* Next Button */}
+              <button
+                onClick={goToNextPage}
+                disabled={currentPage === totalPages || totalPages <= 1}
+                className="px-3 py-2 rounded-lg items-center justify-center bg-white dark:bg-slate-900 border-2 border-earth-600 text-earth-600 dark:text-earth-300 font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-earth-50 dark:hover:bg-slate-800 transition-colors"
+              >
+                <FaChevronRight className="inline h-4 w-4 mb-1 ml-1" />
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Lightbox */}
