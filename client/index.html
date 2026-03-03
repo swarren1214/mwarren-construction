@@ -20,6 +20,21 @@
 
       gtag('config', 'AW-17945633648');
     </script>
+    <!-- Event snippet for Submit lead form conversion -->
+    <script>
+      function gtag_report_conversion(url) {
+        var callback = function () {
+          if (typeof(url) != 'undefined') {
+            window.location = url;
+          }
+        };
+        gtag('event', 'conversion', {
+          'send_to': 'AW-17945633648/FOWlCKKNsvYbEPDGku1C',
+          'event_callback': callback
+        });
+        return false;
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

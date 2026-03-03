@@ -83,6 +83,10 @@ const Contact = () => {
       setErrors(newErrors)
       return
     }
+
+    if (typeof window !== 'undefined' && typeof window.gtag_report_conversion === 'function') {
+      window.gtag_report_conversion()
+    }
     
     setIsSubmitting(true)
     setSubmitStatus(null)
