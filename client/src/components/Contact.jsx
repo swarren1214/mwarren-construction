@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock, FaCheckCircle } from 'react-icons/fa'
+import { trackEvent } from '../utils/analytics'
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -128,6 +129,13 @@ const Contact = () => {
       
       if (response.ok) {
         // Success
+        trackEvent('generate_lead', {
+          event_category: 'engagement',
+          event_label: 'contact_form_success',
+          project_type: formData.projectType || 'unknown',
+          value: 1
+        })
+
         setSubmitStatus('success')
         setFormData({
           fullName: '',
@@ -141,11 +149,21 @@ const Contact = () => {
       } else {
         // Error from server
         const data = await response.json()
+        trackEvent('contact_form_error', {
+          event_category: 'engagement',
+          event_label: 'contact_form_server_error'
+        })
+
         setSubmitStatus('error')
         setErrorMessage(data.error || data.errors?.[0]?.message || 'There was an error sending your message. Please try calling us directly at (801) 369-8515.')
       }
     } catch (error) {
       // Network or other error
+      trackEvent('contact_form_error', {
+        event_category: 'engagement',
+        event_label: 'contact_form_network_error'
+      })
+
       setSubmitStatus('error')
       setErrorMessage('There was an error sending your message. Please try calling us directly at (801) 369-8515.')
     } finally {
@@ -181,6 +199,7 @@ const Contact = () => {
             <div className="space-y-4">
               <a 
                 href="tel:8013698515"
+                onClick={() => trackEvent('contact_click', { event_category: 'engagement', event_label: 'phone' })}
                 className="flex items-start space-x-4 p-6 bg-earth-50 dark:bg-slate-800 rounded-lg hover:bg-earth-100 dark:hover:bg-slate-700 transition-colors group"
               >
                 <div className="flex-shrink-0">
@@ -197,6 +216,7 @@ const Contact = () => {
 
               <a 
                 href="mailto:mikewarrenconstruction@outlook.com"
+                onClick={() => trackEvent('contact_click', { event_category: 'engagement', event_label: 'email' })}
                 className="flex items-start space-x-4 p-6 bg-earth-50 dark:bg-slate-800 rounded-lg hover:bg-earth-100 dark:hover:bg-slate-700 transition-colors group"
               >
                 <div className="flex-shrink-0">
