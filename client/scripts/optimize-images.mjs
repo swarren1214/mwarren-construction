@@ -31,6 +31,9 @@ const CONFIG_FINGERPRINT = JSON.stringify({
 
 const LEGACY_EXCLUDED_FILES = new Set(['mwarren-profile-photo.png'])
 
+// Photos listed here appear first in the gallery, in this order.
+const FEATURED_RELATIVE_PATHS = ['IMG_3499.jpeg', 'IMG_3500.jpeg']
+
 const normalizePath = (value) => value.split(path.sep).join('/')
 
 const getExtensionTag = (ext) => ext.replace(/^\./, '').toLowerCase()
@@ -329,7 +332,16 @@ const main = async () => {
     }
   }
 
-  galleryItems.sort((first, second) => first.relativePath.localeCompare(second.relativePath))
+  const getFeaturedRank = (relativePath) => {
+    const index = FEATURED_RELATIVE_PATHS.indexOf(relativePath)
+    return index === -1 ? FEATURED_RELATIVE_PATHS.length : index
+  }
+
+  galleryItems.sort((first, second) => {
+    const rankDifference = getFeaturedRank(first.relativePath) - getFeaturedRank(second.relativePath)
+    if (rankDifference !== 0) return rankDifference
+    return first.relativePath.localeCompare(second.relativePath)
+  })
 
   const deletedCount = await pruneOutputDirectory(keptGeneratedFiles)
 

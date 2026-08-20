@@ -1,5 +1,81 @@
 [
   {
+    "id": "IMG_3499-jpeg",
+    "relativePath": "IMG_3499.jpeg",
+    "title": "IMG 3499",
+    "description": "Professional project by M.WARREN CONSTRUCTION",
+    "alt": "IMG 3499",
+    "width": 5712,
+    "height": 4284,
+    "avif": [
+      {
+        "width": 400,
+        "url": "images/optimized/IMG_3499@400w.avif",
+        "file": "IMG_3499@400w.avif"
+      },
+      {
+        "width": 2000,
+        "url": "images/optimized/IMG_3499@2000w.avif",
+        "file": "IMG_3499@2000w.avif"
+      }
+    ],
+    "webp": [
+      {
+        "width": 400,
+        "url": "images/optimized/IMG_3499@400w.webp",
+        "file": "IMG_3499@400w.webp"
+      },
+      {
+        "width": 2000,
+        "url": "images/optimized/IMG_3499@2000w.webp",
+        "file": "IMG_3499@2000w.webp"
+      }
+    ],
+    "lightbox": {
+      "width": 2000,
+      "url": "images/optimized/IMG_3499@2000w.webp",
+      "file": "IMG_3499@2000w.webp"
+    }
+  },
+  {
+    "id": "IMG_3500-jpeg",
+    "relativePath": "IMG_3500.jpeg",
+    "title": "IMG 3500",
+    "description": "Professional project by M.WARREN CONSTRUCTION",
+    "alt": "IMG 3500",
+    "width": 4032,
+    "height": 3024,
+    "avif": [
+      {
+        "width": 400,
+        "url": "images/optimized/IMG_3500@400w.avif",
+        "file": "IMG_3500@400w.avif"
+      },
+      {
+        "width": 2000,
+        "url": "images/optimized/IMG_3500@2000w.avif",
+        "file": "IMG_3500@2000w.avif"
+      }
+    ],
+    "webp": [
+      {
+        "width": 400,
+        "url": "images/optimized/IMG_3500@400w.webp",
+        "file": "IMG_3500@400w.webp"
+      },
+      {
+        "width": 2000,
+        "url": "images/optimized/IMG_3500@2000w.webp",
+        "file": "IMG_3500@2000w.webp"
+      }
+    ],
+    "lightbox": {
+      "width": 2000,
+      "url": "images/optimized/IMG_3500@2000w.webp",
+      "file": "IMG_3500@2000w.webp"
+    }
+  },
+  {
     "id": "20220827_090510-jpg",
     "relativePath": "20220827_090510.jpg",
     "title": "20220827 090510",
