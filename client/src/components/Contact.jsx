@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock, FaCheckCircle } from 'react-icons/fa'
+import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock } from 'react-icons/fa'
 import { trackEvent } from '../utils/analytics'
 
 const Contact = () => {
@@ -140,16 +140,7 @@ const Contact = () => {
           value: 1
         })
 
-        setSubmitStatus('success')
-        setFormData({
-          fullName: '',
-          email: '',
-          phone: '',
-          projectType: '',
-          projectDescription: ''
-        })
-        setHoneypot('')
-        setErrors({})
+        window.location.assign('/thank-you/')
       } else {
         // Error from server
         const data = await response.json()
@@ -268,16 +259,6 @@ const Contact = () => {
           <div className="bg-gray-50 dark:bg-slate-950 rounded-xl shadow-xl p-8 border border-transparent dark:border-slate-800">
             <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Request a Free Estimate</h3>
             
-            {submitStatus === 'success' && (
-              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start space-x-3">
-                <FaCheckCircle className="text-green-600 text-xl flex-shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-semibold text-green-900">Message Sent Successfully!</h4>
-                  <p className="text-green-700 text-sm">We'll get back to you within 24 hours.</p>
-                </div>
-              </div>
-            )}
-
             {submitStatus === 'error' && (
               <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-red-700 text-sm">

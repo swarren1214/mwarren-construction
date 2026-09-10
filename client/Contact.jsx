@@ -239,7 +239,7 @@ const Contact = () => {
                 <FaCheckCircle className="text-green-600 text-xl flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-semibold text-green-900">Message Sent Successfully!</h4>
-                  <p className="text-green-700 text-sm">We'll get back to you within 24 hours.</p>
+                  <p className="text-green-700 text-sm">We'll get back to you as quickly as possible.</p>
                 </div>
               </div>
             )}

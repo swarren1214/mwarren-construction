@@ -6,6 +6,7 @@ import Gallery from './components/Gallery'
 import Videos from './components/Videos'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
+import ThankYou from './components/ThankYou'
 
 function App() {
   const [theme, setTheme] = useState('light')
@@ -29,6 +30,10 @@ function App() {
 
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'))
+  }
+
+  if (window.location.pathname === '/thank-you' || window.location.pathname === '/thank-you/') {
+    return <ThankYou theme={theme} onToggleTheme={toggleTheme} />
   }
 
   return (
