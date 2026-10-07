@@ -140,7 +140,7 @@ const Contact = () => {
           value: 1
         })
 
-        window.location.assign('/thank-you/')
+        window.location.assign('/#/thank-you')
       } else {
         // Error from server
         const data = await response.json()

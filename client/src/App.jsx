@@ -32,7 +32,7 @@ function App() {
     setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'))
   }
 
-  if (window.location.pathname === '/thank-you' || window.location.pathname === '/thank-you/') {
+  if (window.location.hash === '#/thank-you' || window.location.pathname === '/thank-you' || window.location.pathname === '/thank-you/') {
     return <ThankYou theme={theme} onToggleTheme={toggleTheme} />
   }
 
